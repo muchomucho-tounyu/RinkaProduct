@@ -14,7 +14,7 @@ class WorkSeeder extends Seeder
      */
     public function run(): void
     {
-        Work::create([
+        Work::insert([
             [
                 'name' => '花より男子',
                 'release_year' => 2005,
