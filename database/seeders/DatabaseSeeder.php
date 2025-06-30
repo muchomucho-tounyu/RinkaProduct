@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Person;
+use App\Models\Work;
+use App\Models\Song;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +16,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([
+            PersonSeeder::class,
+            SongSeeder::class,
+            WorkSeeder::class,
+        ]);
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

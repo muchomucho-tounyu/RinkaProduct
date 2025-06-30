@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Person;
-use App\Models\Work;
 use App\Models\Song;
 
 class SongSeeder extends Seeder
@@ -15,7 +13,7 @@ class SongSeeder extends Seeder
      */
     public function run(): void
     {
-        Song::create([
+        Song::insert([
             [
                 'name' => '勿忘',
                 'release_year' => 2021,
