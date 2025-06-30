@@ -13,6 +13,7 @@ class SongSeeder extends Seeder
      */
     public function run(): void
     {
+
         Song::insert([
             [
                 'name' => '勿忘',
