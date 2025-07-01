@@ -1,12 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\FavoriteController;
-use App\Http\Controllers\VisitController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\MypageController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,22 +14,18 @@ use App\Http\Controllers\MypageController;
 |
 */
 
-Route::get('/', [PostController::class, 'index']);
-Route::get('/users', [PostController::class, 'searche'])->name('users.search');
-Route::get('/posts/create', [PostController::class, 'create']);
-Route::post('/posts', [PostController::class, 'store'])->middleware('auth')->name('posts.store');
-Route::get('/posts/{post}', [PostController::class, 'show']);
-Route::get('/posts/{post}/edit', [PostController::class, 'edit']);
-Route::put('/posts/{post}', [PostController::class, 'update']);
-Route::delete('/posts/{post}', [PostController::class, 'delete']);
-Route::get('/search', [SearchController::class, 'index'])->name('search.index');
-Route::middleware('auth')->group(function () {
-    Route::post('/posts/{post}/favorite', [FavoriteController::class, 'toggle'])->name('posts.favorite.toggle');
+Route::get('/', function () {
+    return view('welcome');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
 Route::middleware('auth')->group(function () {
-    Route::post('/posts/{post}/visit', [VisitController::class, 'toggle'])->name('posts.visit/toggle');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::middleware('auth')->group(function () {
-    Route::get('/mypage', [App\Http\Controllers\MypageController::class, 'index'])->name('mypage.index');
-});
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+require __DIR__.'/auth.php';

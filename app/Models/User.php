@@ -12,6 +12,12 @@ class User extends Authenticatable
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
     public function favorites(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'favorites')->withTimestamps();
