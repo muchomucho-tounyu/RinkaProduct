@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('work_id')->nullable;
-            $table->unsignedBigInteger('person_id')->nullable;
-            $table->unsignedBigInteger('song_id')->nullable;
+            $table->unsignedBigInteger('work_id')->nullable();
+            $table->unsignedBigInteger('person_id')->nullable();
+            $table->unsignedBigInteger('song_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

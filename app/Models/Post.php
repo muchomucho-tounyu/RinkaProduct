@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
+    use SoftDeletes;
     use HasFactory;
     public function getPaginateByLimit(int $limit_count = 10)
     {
@@ -17,4 +19,23 @@ class Post extends Model
         'title',
         'body',
     ];
+    public function work()
+    {
+        return $this->belongsTo(Work::class);
+    }
+
+    public function song()
+    {
+        return $this->belongsTo(Song::class);
+    }
+
+    public function person()
+    {
+        return $this->belongsTo(Person::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
