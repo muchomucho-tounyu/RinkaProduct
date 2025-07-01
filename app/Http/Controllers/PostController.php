@@ -5,63 +5,76 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
+use App\Models\Work;
+use App\Models\Song;
+use App\Models\Person;
 
 class PostController extends Controller
 {
-    public function index(Post $post)
+    public function index()
     {
-        return view('posts.index')->with(['posts' => $post->getPaginateByLimit()]);
+        $posts = Post::latest()->paginate(10);
+        return view('posts.index', compact('posts'));
     }
-    public function search(Request $request)
-    {
-        $query = Post::query();
 
-        if ($request->filled('keyword')) {
-            $keyword = $request->input('keyword');
-            $query->where('name', 'like', '%' . $keyword . '%');
-        }
-
-
-
-        return view('users.index', compact('users'));
-    }
     public function show(Post $post)
     {
-        return view('posts.show')->with(['posts' => $post]);
+        return view('posts.show', compact('post'));
     }
 
-    public function create(Post $post)
+    public function create()
     {
-        return view('posts.create');
+        return view('posts.create', [
+            'works' => Work::all(),
+            'songs' => Song::all(),
+            'people' => Person::all(),
+        ]);
     }
 
-    public function store(Request $request, Post $post)
+    public function store(PostRequest $request)
     {
-        $input = $request['post'];
-        $post->fill($input)->save();
-        return redirect('/posts/' . $post->id);
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('images', 'public');
+        }
+
+        $data['user_id'] = auth()->id();
+
+        $post = Post::create($data);
+
+        return redirect()->route('posts.show', $post);
     }
 
     public function edit(Post $post)
     {
-        return view('posts.edit')->with(['post' => $post]);
+        return view('posts.edit', [
+            'post' => $post,
+            'works' => Work::all(),
+            'songs' => Song::all(),
+            'people' => Person::all(),
+        ]);
     }
 
     public function update(PostRequest $request, Post $post)
     {
-        $input_post = $request['post'];
-        $post->fill($input_post)->save();
+        $data = $request->validated();
 
-        return redirect('/posts/' . $post->id);
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('images', 'public');
+        }
+
+        $post->update($data);
+
+        return redirect()->route('posts.show', $post);
     }
 
-    public function delete(Post $post)
+    public function destroy(Post $post)
     {
         $post->delete();
-        return redirect('/');
+
+        return redirect()->route('posts.index')->with('success', '投稿を削除しました');
     }
 
-
-
-    //
+    // 
 }

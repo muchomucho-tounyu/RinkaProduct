@@ -9,41 +9,10 @@
 </head>
 
 <body>
-    <h1>Pilgrimage</h1>
-    <form action="{{ route('users.index') }}" method="GET">
-        <input type="text" name="user_name" placeholder="ユーザー名で検索" value="{{ request('user_name') }}">
-        <input type="text" name="work_name" placeholder="作品名で検索" value="{{ request('work_name') }}">
-        <input type="text" name="song_name" placeholder="楽曲名で検索" value="{{ request('song_name') }}">
-        <input type="text" name="person_name" placeholder="人物名で検索" value="{{ request('person_name') }}">
-        <button type="submit">検索</button>
-    </form>
-
-    <!-- ユーザー名検索結果 -->
-    @foreach ($users as $user)
-    <p>{{ $user->name }}</p>
-    @endforeach
-    {{ $users->links() }}
-
-    <!-- 作品名検索結果 -->
-    @foreach ($works as $work)
-    <p>{{ $work->title }}</p>
-    @endforeach
-    {{ $works->links() }}
-
-    <!-- 楽曲名検索結果 -->
-    @foreach ($songs as $song)
-    <p>{{ $song->title }}</p>
-    @endforeach
-    {{ $songs->links() }}
-
-    <!-- 人物名検索結果 -->
-    @foreach ($persons as $person)
-    <p>{{ $person->name }}</p>
-    @endforeach
-    {{ $persons->links() }}
+    <h1>投稿一覧</h1>
+    <a href="{{ route('search.index') }}">検索ページへ</a>
 
 
-    <a href='/posts/create'>create</a>
 
     @foreach($posts as $post)
     <div class='post'>
@@ -64,6 +33,11 @@
                 @endif
             </a>
         </h2>
+        {{-- 投稿者名 --}}
+        <p><strong>投稿者：</strong> {{ $post->user->name }}</p>
+
+        {{-- 人物名（optional） --}}
+        <p><strong>登場人物：</strong> {{ $post->person->name ?? '未設定' }}</p>
 
         {{-- 場所名 --}}
         <p class='location'>
@@ -76,6 +50,25 @@
             <button type="button" onclick="deletePost({{ $post->id }})">delete</button>
 
         </form>
+        @foreach($posts as $post)
+        <div class="post">
+            <h2>{{ $post->work->name ?? $post->song->name ?? 'タイトルなし' }}</h2>
+            <!-- いいねボタン -->
+            <form action="{{ route('posts.favorite.toggle', $post) }}" method="POST">
+                @csrf
+                <button type="submit">
+                    @auth
+                    {{ auth()->user()->favorites->contains($post->id) ? 'お気に入り解除' : 'お気に入り登録' }}
+                    @else
+                    お気に入り
+                    @endauth
+                </button>
+            </form>
+        </div>
+        @endforeach
+
+        <a href='/posts/create'>create</a>
+
     </div>
     @endforeach
     </div>

@@ -18,28 +18,20 @@ class SearchController extends Controller
         $queryPerson = Person::query();
 
         if ($request->filled('user_name')) {
-            $user_name = $request->input('user_name');
-            $queryUser->where('name', 'like', '%' . $user_name . '%');
+            $queryUser->where('name', 'like', '%' . $request->user_name . '%');
         }
-
 
         if ($request->filled('work_name')) {
-            $work_name = $request->input('work_name');
-            $queryWork->where('title', 'like', '%' . $work_name . '%');
+            $queryWork->where('name', 'like', '%' . $request->work_name . '%');
         }
-
 
         if ($request->filled('song_name')) {
-            $song_name = $request->input('song_name');
-            $querySong->where('title', 'like', '%' . $song_name . '%');
+            $querySong->where('name', 'like', '%' . $request->song_name . '%');
         }
-
 
         if ($request->filled('person_name')) {
-            $person_name = $request->input('person_name');
-            $queryPerson->where('name', 'like', '%' . $person_name . '%');
+            $queryPerson->where('name', 'like', '%' . $request->person_name . '%');
         }
-
 
         $users = $queryUser->paginate(10);
         $works = $queryWork->paginate(10);
@@ -49,4 +41,3 @@ class SearchController extends Controller
         return view('search.index', compact('users', 'works', 'songs', 'persons'));
     }
 }
-    //
