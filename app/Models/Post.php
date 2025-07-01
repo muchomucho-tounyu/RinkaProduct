@@ -16,8 +16,17 @@ class Post extends Model
     }
 
     protected $fillable = [
-        'title',
+        'work_id',
+        'work_name',
+        'song_id',
+        'song_name',
+        'person_id',
+        'location',
+        'image',
         'body',
+        'user_id',
+
+
     ];
     public function work()
     {

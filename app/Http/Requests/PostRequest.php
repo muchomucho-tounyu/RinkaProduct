@@ -3,12 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class PostRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
         return true;
@@ -31,23 +30,23 @@ class PostRequest extends FormRequest
         ];
     }
 
-    public function Validator($validator)
+    public function withValidator(Validator $validator)
     {
         $validator->after(function ($validator) {
-            $workId = $this->input('work_id');
-            $songId = $this->input('song_id');
+            $workName = $this->input('work_name');
+            $songName = $this->input('song_name');
 
-            if (empty($workId) && empty($songId)) {
-                $validator->errors()->add('work_id', '作品名または楽曲名のいずれかを選択してください。');
+            if (empty($workName) && empty($songName)) {
+                $validator->errors()->add('work_Name', '作品名または楽曲名のいずれかを入力してください。');
             }
         });
     }
     public function messages(): array
     {
         return [
-            'work_id.exists'   => '選択された作品が存在しません。',
-            'song_id.exists'   => '選択された楽曲が存在しません。',
-            'person_id.exists' => '選択された人物が存在しません。',
+            'work_name.exists'   => '入力された作品が存在しません。',
+            'song_name.exists'   => '入力された楽曲が存在しません。',
+            'person_id.exists' => '入力された人物が存在しません。',
             'image.image'      => 'アップロードできるのは画像ファイルのみです。',
             'image.max'        => '画像サイズは5MB以下にしてください。',
         ];

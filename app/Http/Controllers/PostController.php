@@ -35,15 +35,17 @@ class PostController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('images', 'public');
-        }
-
+        // 現在ログイン中のユーザーIDをセット
         $data['user_id'] = auth()->id();
 
-        $post = Post::create($data);
+        // もしログインしていなければエラーに
+        if (!$data['user_id']) {
+            abort(403, 'ログインしてください');
+        }
 
-        return redirect()->route('posts.show', $post);
+        Post::create($data);
+
+        return redirect()->route('posts.index')->with('success', '投稿しました');
     }
 
     public function edit(Post $post)
