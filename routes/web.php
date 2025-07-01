@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\VisitController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,4 +27,7 @@ Route::delete('/posts/{post}', [PostController::class, 'delete']);
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/favorite', [FavoriteController::class, 'toggle'])->name('posts.favorite.toggle');
+});
+Route::middleware('auth')->group(function () {
+    Route::post('/posts/{post}/visit', [VisitController::class, 'toggle'])->name('posts.visit/toggle');
 });

@@ -6,19 +6,20 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class FavoriteController extends Controller
+class VisitController extends Controller
 {
     public function toggle(Post $post)
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        if ($user->favorites()->where('post_id', $post->id)->exists()) {
-            $user->favorites()->detach($post->id); // お気に入り解除
+        if ($user->visits()->where('post_id', $post->id)->exists()) {
+            $user->visits()->detach($post->id);
         } else {
-            $user->favorites()->attach($post->id); // お気に入り登録
+            $user->visits()->attach($post->id);
         }
 
         return back();
-    } //
+    }
+    //
 }
