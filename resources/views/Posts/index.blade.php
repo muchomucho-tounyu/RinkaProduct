@@ -71,6 +71,9 @@
         {{$posts->links()}}
     </div>
 
+    <p class='username'>ログインユーザー：{{ Auth::user()->name }}</p>
+
+
     <script>
         function deletePost(id) {
             'use strict'

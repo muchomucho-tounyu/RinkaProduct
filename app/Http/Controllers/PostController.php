@@ -14,6 +14,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::latest()->paginate(10);
+        dd($posts);
         return view('posts.index', compact('posts'));
     }
 
@@ -33,20 +34,19 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
-        $data = $request->validated();
+        $input = $request->validated(); // バリデ済みデータを全部取得
+        $input['user_id'] = auth()->id();
 
-        // 現在ログイン中のユーザーIDをセット
-        $data['user_id'] = auth()->id();
-
-        // もしログインしていなければエラーに
-        if (!$data['user_id']) {
+        if (!$input['user_id']) {
             abort(403, 'ログインしてください');
         }
 
-        Post::create($data);
+        $post = new Post();
+        $post->fill($input)->save();
 
-        return redirect()->route('posts.index')->with('success', '投稿しました');
+        return redirect('/posts/' . $post->id);
     }
+
 
     public function edit(Post $post)
     {
@@ -66,10 +66,13 @@ class PostController extends Controller
             $data['image'] = $request->file('image')->store('images', 'public');
         }
 
-        $post->update($data);
+        $data['user_id'] = auth()->id();
 
-        return redirect()->route('posts.show', $post);
+        $post->fill($data)->save();
+
+        return redirect('/posts/' . $post->id);
     }
+
 
     public function destroy(Post $post)
     {

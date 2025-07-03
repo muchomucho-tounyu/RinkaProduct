@@ -1,8 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VisitController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\MypageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,14 +20,25 @@ use App\Http\Controllers\PostController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/', [PostController::class, 'index'])->name('index');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/', [PostController::class, 'index'])->name('index');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/create', [PostController::class, 'create'])->name('create');
+    Route::get('/posts/{post}', [PostController::class,  'show'])->name('show');
+    Route::put('/posts/{post}', [PostController::class,  'update'])->name('update');
+    Route::delete('/posts/{post}', [PostController::class,  'delete'])->name('delete');
+    Route::get('/posts/{post}/edit', [PostController::class,   'edit'])->name('edit');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/users', [SearchController::class, 'search'])->name('search.index');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
